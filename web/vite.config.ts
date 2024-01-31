@@ -13,8 +13,12 @@ export default defineConfig({
       plugins: [tailwind(), autoprefixer()],
     },
   },
+  build: {
+        sourcemap: true,
+    },
   resolve: {
     alias: {
+      'vue': 'vue/dist/vue.esm-bundler.js',
       "@": path.resolve(__dirname, "./src"),
     },
   },
