@@ -5,8 +5,8 @@ A simple instant messaging application using Vue, Shadcn UI, TailwindCSS, Flask,
 Git, Python, and NPM are required to install the server. 
 Download the project from github
 ``` bash
-git clone https://github.com/clone/url
-cd project
+git clone https://github.com/jforseth210/SimpleChat
+cd SimpleChat
 ```
 
 Build the vue project
