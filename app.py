@@ -138,7 +138,7 @@ def logout():
     """
     A route to end an authenticated session
     """
-    logout_user(current_user)
+    logout_user()
     return {"success": True}
 
 
