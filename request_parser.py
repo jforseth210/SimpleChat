@@ -1,6 +1,3 @@
-"""
-Helper functions for the api modules
-"""
 import inspect
 import logging
 from functools import wraps
@@ -13,7 +10,11 @@ from werkzeug.datastructures import MultiDict
 logger = logging.getLogger(__name__)
 
 
-def request_data_parser(func):
+def body_to_args(func):
+    """
+    This is a decorator I wrote a while ago that takes a request body 
+    and converts it to arguments.
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         request_data = load_request_data(**kwargs)
