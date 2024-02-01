@@ -20,6 +20,7 @@ cd ..
 Install python dependencies and run the server
 ```bash
 python -m venv venv
+venv/bin/activate
 pip install -r requirements.txt
 flask run
 ```
