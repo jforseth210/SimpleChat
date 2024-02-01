@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/*
+Handles signup and login for the application
+*/
+
 import { ref } from 'vue';
 import router from './router';
 import { Button } from "@/components/ui/button";
@@ -14,20 +18,33 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { setLoggedIn, isLoggedIn } from '@/AuthStore';
+
+// The value of the text fields on the signup tab
 const signupUsername = ref(undefined);
 const signupPassword = ref(undefined);
+
+// The value of the text fields on the login tab
 const loginUsername = ref(undefined);
 const loginPassword = ref(undefined);
 
+// Redirect to project if logged in already
 if (isLoggedIn()) {
   router.push('/');
 }
 
+
 async function signUp() {
+  /*
+    Handle signup request with the server
+  */
+
+  // Don't allow if no values
   if (signupUsername.value == undefined || signupPassword.value == undefined) {
     return;
   }
-  const response = await fetch('http://127.0.0.1:5000/signup', {
+
+  // Attempt to sign up
+  const response = await fetch('/signup', {
     method: "POST",
     credentials: 'include',
     headers: {
@@ -38,16 +55,28 @@ async function signUp() {
       "password": signupPassword.value
     })
   })
-  if ((await response.json())["success"] == true) {
+
+  // Parse response 
+  const responseJson = await response.json()
+
+  // Did we sign up?
+  if (response.status == 200 && responseJson["success"] == true) {
+    // Yes, go to messenger
     setLoggedIn(true, signupUsername.value);
     router.push('/');
+  } else {
+    // No, something went wrong
+    alert("Unable to sign up. " + responseJson["message"])
   }
 }
 async function login() {
+  // Don't allow if no values
   if (loginUsername.value == undefined || loginPassword == undefined) {
     return;
   }
-  const response = await fetch('http://127.0.0.1:5000/signin', {
+
+  // Attempt to login
+  const response = await fetch('/signin', {
     method: "POST",
     credentials: 'include',
     headers: {
@@ -58,16 +87,18 @@ async function login() {
       "password": loginPassword.value
     })
   })
-  if ((await response.json())["success"] == true) {
+  const responseJson = await response.json()
+  // Did we login?
+  if (response.status == 200 && responseJson["success"] == true) {
+    // Yes, go to messenger
     setLoggedIn(true, loginUsername.value);
     router.push('/');
-  }
+  } else { alert("Unable to log in. " + responseJson["message"]) }
 }
 </script>
 
 <template>
   <div class="flex justify-center items-center h-screen">
-
     <Tabs default-value="signup" class="w-[400px]">
       <TabsList class="grid w-full grid-cols-2">
         <TabsTrigger value="signup"> Sign Up </TabsTrigger>
@@ -78,7 +109,7 @@ async function login() {
           <form @submit.prevent="signUp">
             <CardHeader>
               <CardTitle>Sign Up</CardTitle>
-              <CardDescription>Sign up for thingy</CardDescription>
+              <CardDescription>Sign up for instant messaging</CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">
               <div class="space-y-1">
@@ -101,7 +132,7 @@ async function login() {
           <form @submit.prevent="login">
             <CardHeader>
               <CardTitle>Log In</CardTitle>
-              <CardDescription>Log in to thingy</CardDescription>
+              <CardDescription>Login to instant messaging</CardDescription>
             </CardHeader>
             <CardContent class="space-y-2">
               <div class="space-y-1">
